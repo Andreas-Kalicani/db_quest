@@ -5,7 +5,12 @@ const express = require("express");
 const app = express();
 
 // We store the port we want to use in a variable
-const port = 3000;
+const port = process.env.PORT || 3000;
+
+// the configuration of the database. 
+const connection = require("./db-config");
+
+console.log(connection); 
 
 // We create a get route for '/'
 app.get("/", (request, response) => {
@@ -49,6 +54,17 @@ const cocktails = [
   },
 ];
 
+connection.connect((err) => {
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+  } else {
+    console.log('connected to database with threadId :  ' + connection.threadId);
+  }
+});
+
+
+connection.connect();
+
 // We create a route for '/cocktails'
 app.get("/cocktails", (request, response) => {
   // we send back a 200 status and the cocktail in a JSON format
@@ -59,3 +75,5 @@ app.get("/cocktails", (request, response) => {
 app.listen(port, () => {
   console.log(`Server is runing on ${port}`);
 });
+
+keepAliveTimeout = 61 * 1000;
